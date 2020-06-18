@@ -1,6 +1,14 @@
-# Commands and Notes
+# ATEM Switcher Go Client
 
-### States
+Pure Go implementation of the ATEM switcher protocol by Blackmagic Design.
+
+See the [`example`](./examples/main.go) for how to use it.
+
+_This project is in its early stages. Below is a list of commands that are currently supported._
+
+## Supported Protocol Subset
+
+#### Status
 
 - ✅: Implemented
 - 🤨: Behaves unexpectedly, use with caution
@@ -8,7 +16,7 @@
 - ⭕️: Not (yet) implemented, byte layout known
 - ❓: No idea what it does or what the byte layout is like
 
-## Switcher
+### Switcher
 
 | Slug   | Long name                           | Status | Notes                                                                    |
 | ------ | ----------------------------------- | ------ | ------------------------------------------------------------------------ |
@@ -69,6 +77,7 @@
 | `MPrp` | Macro Properties                    | ⭕️    |                                                                          |
 | `MRcS` | Macro Recording Status              | ⭕️    |                                                                          |
 | `SSrc` | Super Source                        | ⭕️    |                                                                          |
+| `SSBd` | Super Source Border                 | ❓     |                                                                          |
 | `SSBP` | Super Source Box Properties         | ⭕️    |                                                                          |
 | `AMIP` | Audio Mixer Input                   | ⭕️    |                                                                          |
 | `AMMO` | Audio Mixer Master                  | ⭕️    |                                                                          |
@@ -108,4 +117,6 @@
 | `FMPP` |                                     | ❓     |
 | `MOCP` |                                     | ❓     |
 
-## Client
+### Client
+
+_TBD_
