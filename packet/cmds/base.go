@@ -1,6 +1,10 @@
 package cmds
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+
+	"github.com/mraerino/atem-go/models"
+)
 
 type UnknownCommand struct {
 	slug string
@@ -58,5 +62,28 @@ func (*IncmCmd) MarshalBinary() ([]byte, error) {
 }
 
 func (*IncmCmd) UnmarshalBinary(data []byte) error {
+	return nil
+}
+
+type TimeCmd models.Timecode
+
+func (TimeCmd) Slug() string {
+	return "Time"
+}
+
+func (t *TimeCmd) MarshalBinary() ([]byte, error) {
+	pl := make([]byte, 8)
+	pl[0] = uint8(t.Hour)
+	pl[1] = uint8(t.Minute)
+	pl[2] = uint8(t.Second)
+	pl[3] = uint8(t.Frame)
+	return pl, nil
+}
+
+func (t *TimeCmd) UnmarshalBinary(data []byte) error {
+	t.Hour = int(data[0])
+	t.Minute = int(data[1])
+	t.Second = int(data[2])
+	t.Frame = int(data[3])
 	return nil
 }

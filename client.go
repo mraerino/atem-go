@@ -276,6 +276,12 @@ func (c *Client) processCommands(log logrus.FieldLogger, msg packet.Message) (in
 				Hash:     t.Hash,
 				Filename: t.Filename,
 			}
+		case cmds.TlinCmd:
+			c.state.TallyByIndex = t
+		case cmds.TlsrCmd:
+			c.state.TallyBySource = t
+		case *cmds.TimeCmd:
+			c.state.TimeCodeLastChange = models.Timecode(*t)
 		default:
 			log.Debug("Unhandled packet type")
 		}

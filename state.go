@@ -29,8 +29,13 @@ type SwitcherState struct {
 	Preview map[int]models.VideoSource
 	Aux     map[int]models.VideoSource
 
+	TallyByIndex  map[int]models.TallyState
+	TallyBySource map[models.VideoSource]models.TallyState
+
 	MediaPlayer map[int]*models.MediaPlayer
 	MediaFiles  map[int]models.MediaStillFrame
+
+	TimeCodeLastChange models.Timecode
 }
 
 func NewSwitcherState() SwitcherState {

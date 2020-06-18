@@ -58,6 +58,12 @@ func UnmarshalCommand(data []byte) (Command, error) {
 		cmd = new(cmds.MpceCmd)
 	case "MPfe":
 		cmd = new(cmds.MpfeCmd)
+	case "TlIn":
+		cmd = make(cmds.TlinCmd)
+	case "TlSr":
+		cmd = make(cmds.TlsrCmd)
+	case "Time":
+		cmd = new(cmds.TimeCmd)
 	default:
 		// unknown command (yet)
 		cmd = cmds.NewUnknownCommand(slug)
