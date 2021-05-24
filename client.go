@@ -226,6 +226,8 @@ func (c *Client) processCommands(log logrus.FieldLogger, msg packet.Message) (in
 	c.stateMutex.Lock()
 	defer c.stateMutex.Unlock()
 	for _, cmd := range msg.Commands {
+		log.WithField("slug", cmd.Slug()).Debug("Starting to process command")
+
 		switch t := cmd.(type) {
 		case *cmds.UnknownCommand:
 			log.WithField("slug", t.Slug()).Debug("Got unknown command")
