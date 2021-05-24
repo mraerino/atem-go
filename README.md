@@ -2,7 +2,7 @@
 
 Pure Go implementation of the ATEM switcher protocol by Blackmagic Design.
 
-See the [`example`](./examples/main.go) for how to use it.
+See the [`example`](./examples/basic/main.go) for how to use it.
 
 _This project is in its early stages. Below is a list of commands that are currently supported._
 
