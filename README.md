@@ -118,5 +118,6 @@ _This project is in its early stages. Below is a list of commands that are curre
 | `MOCP` |                                     | ❓     |
 
 ### Client
-
-_TBD_
+| Slug   | Long name                           | Status | Notes                                                                    |
+| ------ | ----------------------------------- | ------ | ------------------------------------------------------------------------ |
+| `TiRq` | Request Timecode | ✅ | `client.Timecode(...)` |

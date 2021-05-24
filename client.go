@@ -33,6 +33,8 @@ type Client struct {
 
 	state      SwitcherState
 	stateMutex sync.RWMutex
+
+	timeRequests chan chan models.Timecode
 }
 
 func NewClient(log logrus.FieldLogger, host string) *Client {
@@ -46,6 +48,8 @@ func NewClientWithPort(log logrus.FieldLogger, host string, port int) *Client {
 		log:       log,
 		started:   util.NewAtomicBool(false),
 		connected: util.NewAtomicBool(false),
+
+		timeRequests: make(chan chan models.Timecode, 100),
 	}
 }
 
@@ -281,7 +285,22 @@ func (c *Client) processCommands(log logrus.FieldLogger, msg packet.Message) (in
 		case cmds.TlsrCmd:
 			c.state.TallyBySource = t
 		case *cmds.TimeCmd:
-			c.state.TimeCodeLastChange = models.Timecode(*t)
+			tc := models.Timecode(*t)
+			done := false
+			for !done {
+				select {
+				case retCh, open := <-c.timeRequests:
+					if !open {
+						done = true
+					}
+					retCh <- tc
+					close(retCh)
+				default:
+					// no more in channel
+					done = true
+				}
+			}
+			c.state.TimeCodeLastChange = tc
 		default:
 			log.Debug("Unhandled packet type")
 		}

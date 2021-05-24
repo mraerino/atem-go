@@ -87,3 +87,17 @@ func (t *TimeCmd) UnmarshalBinary(data []byte) error {
 	t.Frame = int(data[3])
 	return nil
 }
+
+type TiRqCmd struct{}
+
+func (TiRqCmd) Slug() string {
+	return "TiRq"
+}
+
+func (TiRqCmd) MarshalBinary() ([]byte, error) {
+	return make([]byte, 0), nil
+}
+
+func (TiRqCmd) UnmarshalBinary(_ []byte) error {
+	return nil
+}
