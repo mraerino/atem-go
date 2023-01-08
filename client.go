@@ -35,6 +35,8 @@ type Client struct {
 	stateMutex sync.RWMutex
 
 	timeRequests chan chan models.Timecode
+
+	events map[string]func(SwitcherState)
 }
 
 func NewClient(log logrus.FieldLogger, host string) *Client {
@@ -51,6 +53,10 @@ func NewClientWithPort(log logrus.FieldLogger, host string, port int) *Client {
 
 		timeRequests: make(chan chan models.Timecode, 100),
 	}
+}
+
+func (c *Client) SetEvents(events map[string]func(SwitcherState)) {
+	c.events = events
 }
 
 func (c *Client) State() SwitcherState {
@@ -227,7 +233,7 @@ func (c *Client) processCommands(log logrus.FieldLogger, msg packet.Message) (in
 	defer c.stateMutex.Unlock()
 	for _, cmd := range msg.Commands {
 		log.WithField("slug", cmd.Slug()).Debug("Starting to process command")
-
+		funcName := ""
 		switch t := cmd.(type) {
 		case *cmds.UnknownCommand:
 			log.WithField("slug", t.Slug()).Debug("Got unknown command")
@@ -253,6 +259,7 @@ func (c *Client) processCommands(log logrus.FieldLogger, msg packet.Message) (in
 			c.state.Config.SuperSources = int(*t)
 		case *cmds.TlcCmd:
 			c.state.Config.TallyChannels = int(*t)
+			funcName = "onTallyChannels"
 		case *cmds.MacCmd:
 			c.state.Config.MacroBanks = int(*t)
 		case *cmds.PowrCmd:
@@ -284,8 +291,10 @@ func (c *Client) processCommands(log logrus.FieldLogger, msg packet.Message) (in
 			}
 		case cmds.TlinCmd:
 			c.state.TallyByIndex = t
+			funcName = "onTallyByIndex"
 		case cmds.TlsrCmd:
 			c.state.TallyBySource = t
+			funcName = "onTallyBySource"
 		case *cmds.TimeCmd:
 			tc := models.Timecode(*t)
 			done := false
@@ -305,6 +314,10 @@ func (c *Client) processCommands(log logrus.FieldLogger, msg packet.Message) (in
 			c.state.TimeCodeLastChange = tc
 		default:
 			log.Debug("Unhandled packet type")
+		}
+		callback, ok := c.events[funcName]
+		if ok {
+			callback(c.state)
 		}
 	}
 	return
