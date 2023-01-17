@@ -1,4 +1,4 @@
-module github.com/mraerino/atem-go
+module github.com/everycastlabs/atem-go
 
 go 1.13
 
